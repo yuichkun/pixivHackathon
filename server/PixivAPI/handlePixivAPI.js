@@ -1,5 +1,6 @@
 var querystring = require('querystring');
 const stringify = querystring.stringify;
+var requestAPI = require('./requestAPI');
 
 function getPath(type, queryObj){
   var path = "";
@@ -18,11 +19,16 @@ function getPath(type, queryObj){
   return path;
 }
 
-var queryObj = {
-  'q': "hello"
-};
+function searchData(word){
+  return new Promise(function(resolve, reject){
+      var queryObj = {
+        'q': word
+      };
+      var path = getPath('search', queryObj);
+      requestAPI.fetchData(path).then(function(data){
+        resolve(data);
+      });
+  });
+}
 
-var path = getPath('search', queryObj);
-var requestAPI = require('./requestAPI');
-var data = requestAPI.fetchData(path);
-console.log(data);
+module.exports = searchData;

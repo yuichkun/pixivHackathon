@@ -1,6 +1,7 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
-var Layout = require('./layout');
+var Layout = require('./Layout');
+
 
 ReactDOM.render(
   <Layout />,

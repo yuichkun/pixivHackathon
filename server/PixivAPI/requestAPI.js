@@ -10,24 +10,26 @@ function createHttpHeader(path){
     headers: {
         'Content-Type' : 'text',
         'Authorization': 'Bearer ' + ACCESS_TOKEN
-    },
+    }
   };
   return httpHeader;
 }
 
-function makeRequest(httpHeader){
-  request(httpHeader, function(error, response, body){
-    if(error) {
-        console.log(error);
-    } else {
-        console.log(response.statusCode + " success!");
-    }
-  });
-}
-
 var fetchData = function(path){
-  var httpHeader = createHttpHeader(path);
-  return makeRequest(httpHeader);
+  return new Promise(function(resolve, reject){
+    var httpHeader = createHttpHeader(path);
+    request(httpHeader, function(error, response, body){
+      if(error) {
+          console.log(error);
+          reject(error);
+      } else {
+          console.log(response.statusCode + " success!");
+          resolve(body);
+      }
+    });
+  })
 };
+
+
 
 module.exports.fetchData = fetchData;

@@ -11,13 +11,12 @@ var Layout = React.createClass({
     };
   },
   changeScene: function(keyword){
-    
+
     var query = '?value=' + keyword;
     var _this = this;
     jQuery.ajax({
       url: '/keyword' + query,
       success: function(data) {
-
         _this.setState(
           {
             imgURLs: data,

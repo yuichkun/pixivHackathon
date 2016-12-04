@@ -3,7 +3,6 @@ var images = [];
 
 function MyCanvas(imgURLs){
   var sketch = function(p){
-
       p.preload = function(){
         for(var i = 0; i < imgURLs.length; i++){
           var path = 'http://localhost:1290/image?url=' + imgURLs[i];

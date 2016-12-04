@@ -41,5 +41,4 @@ app.get('/image',function(req,res){
     res.end(new Buffer(obj.body, 'binary'));
     fs.writeFileSync('test.jpeg', obj.body, 'binary');
   });
-
 });

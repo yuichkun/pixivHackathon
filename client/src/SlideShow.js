@@ -10,7 +10,7 @@ var SlideShow = React.createClass({
   },
   componentDidMount: function(){
     var canvas = document.getElementById('canvas');
-    var sketch = MyCanvas();
+    var sketch = MyCanvas(this.props.imgURLs);
     new p5(sketch, canvas);
   }
 });

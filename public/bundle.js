@@ -22017,12 +22017,13 @@
 	    };
 	  },
 	  changeScene: function changeScene(keyword) {
+	
 	    var query = '?value=' + keyword;
 	    var _this = this;
 	    jQuery.ajax({
 	      url: '/keyword' + query,
-	      dataType: 'text',
 	      success: function success(data) {
+	
 	        _this.setState({
 	          imgURLs: data,
 	          selecting: false
@@ -22047,12 +22048,12 @@
   \***********************/
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	"use strict";
 	
 	var React = __webpack_require__(/*! react */ 1);
 	
 	var Select = React.createClass({
-	  displayName: 'Select',
+	  displayName: "Select",
 	
 	
 	  handleChange: function handleChange(e) {
@@ -22068,10 +22069,31 @@
 	
 	  render: function render() {
 	    return React.createElement(
-	      'div',
-	      null,
-	      React.createElement('input', { onChange: this.handleChange }),
-	      React.createElement('button', { onClick: this.handleSubmit })
+	      "div",
+	      { className: "controls" },
+	      React.createElement(
+	        "h1",
+	        null,
+	        React.createElement(
+	          "center",
+	          null,
+	          "\u597D\u304D\u306A\u30BF\u30B0\u3092\u691C\u7D22\u3057\u3066\u304F\u3060\u3055\u3044\u3002"
+	        )
+	      ),
+	      React.createElement(
+	        "div",
+	        { className: "row" },
+	        React.createElement("input", { className: "form-control input-lg", onChange: this.handleChange })
+	      ),
+	      React.createElement(
+	        "div",
+	        { className: "row" },
+	        React.createElement(
+	          "button",
+	          { className: "btn btn-primary btn-block", onClick: this.handleSubmit },
+	          "\u691C\u7D22"
+	        )
+	      )
 	    );
 	  }
 	});
@@ -22099,7 +22121,7 @@
 	  },
 	  componentDidMount: function componentDidMount() {
 	    var canvas = document.getElementById('canvas');
-	    var sketch = MyCanvas();
+	    var sketch = MyCanvas(this.props.imgURLs);
 	    new p5(sketch, canvas);
 	  }
 	});
@@ -22111,36 +22133,49 @@
 /*!*************************!*\
   !*** ./src/MyCanvas.js ***!
   \*************************/
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 	
-	function MyCanvas() {
+	var Image = __webpack_require__(/*! ./Image */ 184);
+	var images = [];
+	
+	function MyCanvas(imgURLs) {
 	  var sketch = function sketch(p) {
+	
+	    p.preload = function () {
+	      for (var i = 0; i < imgURLs.length; i++) {
+	        var path = 'http://localhost:1290/image?url=' + imgURLs[i];
+	        // var path = 'http://localhost:1290/image?url=https://i1.pixiv.net/c/150x150/img-master/img/2016/12/04/09/52/00/60228332_p0_master1200.jpg';
+	        var img = p.loadImage(path);
+	        images.push(new Image(img));
+	      }
+	    };
 	    p.setup = function () {
 	      p.createCanvas(window.innerWidth, window.innerHeight, p.WEBGL);
+	      var shorter = p.width < p.height ? p.width : p.height;
+	      for (var i = 0; i < images.length; i++) {
+	        var x = p.width / imgURLs.length * i;
+	        var y = p.height / imgURLs.length * i;
+	        images[i].setPos(x, y);
+	        images[i].setSize(shorter / (images.length - i) * 1.4);
+	        images[i].setSpeed(p.random(0.002, 0.01));
+	      }
 	    };
-	    var offset = 0;
 	    p.draw = function () {
-	      p.background(0);
-	      p.normalMaterial();
-	      p.noStroke();
-	      p.push();
-	      p.rotateY(offset);
-	      offset += 0.1;
-	      console.log(offset);
-	      p.rotateX(-0.9);
-	      p.box(100);
-	      p.pop();
-	
-	      p.translate(-400, 500, 0);
-	      p.push();
-	      p.rotateZ(frameCount * 0.02);
-	      rotateX(frameCount * 0.02);
-	      rotateY(frameCount * 0.02);
-	      ambientMaterial(250);
-	      torus(80, 20, 64, 64);
-	      pop();
+	      p.background(230, 230, 255);
+	      for (var i = 0; i < images.length; i++) {
+	        p.texture(images[i].img);
+	        p.push();
+	        var speed = images[i].speed;
+	        p.rotateZ(p.frameCount * speed);
+	        p.rotateX(p.frameCount * speed);
+	        p.rotateY(p.frameCount * speed);
+	        p.translate(images[i].x, images[i].y, 0);
+	        var b_size = images[i].size;
+	        p.box(b_size, b_size, b_size);
+	        p.pop();
+	      }
 	    };
 	  };
 	  return sketch;
@@ -65413,6 +65448,49 @@
 	return jQuery;
 	} );
 
+
+/***/ },
+/* 184 */
+/*!**********************!*\
+  !*** ./src/Image.js ***!
+  \**********************/
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var Image = function () {
+	  function Image(img) {
+	    _classCallCheck(this, Image);
+	
+	    this.img = img;
+	  }
+	
+	  _createClass(Image, [{
+	    key: "setPos",
+	    value: function setPos(x, y) {
+	      this.x = x;
+	      this.y = y;
+	    }
+	  }, {
+	    key: "setSize",
+	    value: function setSize(size) {
+	      this.size = size;
+	    }
+	  }, {
+	    key: "setSpeed",
+	    value: function setSpeed(speed) {
+	      this.speed = speed;
+	    }
+	  }]);
+	
+	  return Image;
+	}();
+	
+	module.exports = Image;
 
 /***/ }
 /******/ ]);

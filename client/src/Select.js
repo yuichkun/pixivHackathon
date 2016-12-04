@@ -15,9 +15,14 @@ var Select = React.createClass({
 
   render: function(){
     return (
-      <div>
-        <input onChange={this.handleChange}></input>
-        <button onClick={this.handleSubmit}></button>
+      <div className="controls">
+        <h1><center>好きなタグを検索してください。</center></h1>
+        <div className = "row">
+          <input className="form-control input-lg" onChange={this.handleChange}></input>
+        </div>
+        <div className = "row">
+          <button className="btn btn-primary btn-block" onClick={this.handleSubmit}>検索</button>
+        </div>
       </div>
     );
   }

@@ -22151,29 +22151,32 @@
 	        images.push(new Image(img));
 	      }
 	    };
+	    var amp;
 	    p.setup = function () {
 	      p.createCanvas(window.innerWidth, window.innerHeight, p.WEBGL);
 	      var shorter = p.width < p.height ? p.width : p.height;
+	      var size = shorter / images.length;
+	      amp = size * 5;
 	      for (var i = 0; i < images.length; i++) {
-	        var x = p.width / imgURLs.length * i;
-	        var y = p.height / imgURLs.length * i;
-	        images[i].setPos(x, y);
-	        images[i].setSize(shorter / (images.length - i) * 1.4);
-	        images[i].setSpeed(p.random(0.002, 0.01));
+	        images[i].setSize(size);
 	      }
 	    };
+	    var offset = 0;
 	    p.draw = function () {
-	      p.background(230, 230, 255);
+	      offset += 0.05;
+	      p.background(0, 0, 20);
 	      for (var i = 0; i < images.length; i++) {
-	        p.texture(images[i].img);
 	        p.push();
-	        var speed = images[i].speed;
-	        p.rotateZ(p.frameCount * speed);
-	        p.rotateX(p.frameCount * speed);
-	        p.rotateY(p.frameCount * speed);
-	        p.translate(images[i].x, images[i].y, 0);
+	        var angle = 360 / images.length * i + offset;
+	        var theta = p.radians(angle);
+	        var x = p.sin(theta) * amp;
+	        var y = p.height / images.length * i - p.height / 2;
+	        var z = p.cos(theta) * amp;
+	        p.translate(x, y, z);
+	        p.texture(images[i].img);
 	        var b_size = images[i].size;
-	        p.box(b_size, b_size, b_size);
+	        p.rotateY(-offset / 30);
+	        p.box(b_size * 1.5, b_size * 3, b_size * 1.5);
 	        p.pop();
 	      }
 	    };

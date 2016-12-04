@@ -18,7 +18,7 @@ function createHttpHeader(path, encode){
 var fetchData = function(path, encode){
   return new Promise(function(resolve, reject){
     var httpHeader = createHttpHeader(path, encode);
-    console.log("httpHeader is ", httpHeader);
+    // console.log("httpHeader is ", httpHeader);
     request(httpHeader, function(error, response, body){
       if(error) {
           console.log(error);

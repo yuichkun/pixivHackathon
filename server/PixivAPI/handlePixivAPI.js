@@ -12,7 +12,7 @@ function getPath(type, queryObj){
       break;
     case 'search':
       var header = '/v1/search/works';
-      var query = stringify(queryObj) + '&get_secure_url=1';
+      var query = stringify(queryObj);
       path += header + '?' + query;
       break;
   }
@@ -23,7 +23,9 @@ function searchData(word){
   console.log("searching data", word);
   return new Promise(function(resolve, reject){
       var queryObj = {
-        'q': word
+        'q': word,
+        'get_secure_url' : 1,
+        'per_page': 10
       };
       var path = getPath('search', queryObj);
       console.log("search for this path ", path);

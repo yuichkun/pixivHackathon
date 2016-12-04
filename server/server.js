@@ -17,11 +17,13 @@ app.get('/keyword',function(req, res){
     searchData(keyword).then(function(data){
       var body = JSON.parse(data.body);
       var imgURLs = [];
-      for(var i = 0; i < 8; i++){
+      console.log("ippai aru yo");
+      var responseLength = body.response.length;
+      for(var i = 0; i < responseLength; i++){
         imgURLs.push(body.response[i].image_urls.small);
       }
       res.header("Access-Control-Allow-Origin", "*");
-      console.log("imgURLs are ", imgURLs);
+      // console.log("imgURLs are ", imgURLs);
       res.send(imgURLs);
     });
 });
@@ -29,10 +31,10 @@ app.get('/keyword',function(req, res){
 app.get('/image',function(req,res){
   var url_parts = url.parse(req.url, true);
   var img_url = url_parts.query.url;
-  console.log(img_url);
+  // console.log(img_url);
   requestAPI.fetchData(img_url,null).then(function(obj){
-    console.log("response header");
-    console.log(obj.header);
+    // console.log("response header");
+    // console.log(obj.header);
     res.writeHead(200, {
       'Content-Type': obj.header['content-type']
     });
